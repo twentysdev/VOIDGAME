@@ -112,7 +112,7 @@ class StartGameCMD : CommandExecutor {
                 Material.WAXED_EXPOSED_COPPER_GRATE, Material.WITHER_SKELETON_WALL_SKULL,
                 Material.CRAFTER, Material.COPPER_DOOR, Material.WAXED_COPPER_DOOR,
                 Material.WAXED_COPPER_TRAPDOOR, Material.COPPER_TRAPDOOR, Material.END_GATEWAY,
-                Material.NETHER_PORTAL, Material.END_PORTAL
+                Material.NETHER_PORTAL, Material.END_PORTAL, Material.FROSTED_ICE
             )
             val bannedItemNames = listOf(
                 "air", "template", "pottery_sherd", "dye", "candle_cake", "command", "bulb",
