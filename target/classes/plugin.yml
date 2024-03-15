@@ -1,0 +1,9 @@
+name: VOIDGAME
+version: '1.0-SNAPSHOT'
+main: me.krokodil69u.voidgame.VOIDGAME
+api-version: '1.20'
+commands:
+  start:
+    usage: /start
+  stop:
+    usage: /stop
