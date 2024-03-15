@@ -24,7 +24,14 @@ class Events : Listener {
 
             if (instance!!.players.size == 1) {
                 val winner = instance!!.players[0]
+                if (instance!!.playerWins.contains(winner))
+                    instance!!.playerWins[winner] = instance!!.playerWins[winner]!!+1
+                else
+                    instance!!.playerWins[winner] = 1
                 instance!!.players = arrayListOf()
+                for (ff in instance!!.playerWins) {
+                    Bukkit.broadcastMessage(ChatColor.GREEN.toString() + ff.key.name + " - " + ff.value.toString())
+                }
                 for (p in Bukkit.getOnlinePlayers()) {
                     p.sendTitle(ChatColor.GOLD.toString() + winner.name, "win", 20, 60, 20)
                 }

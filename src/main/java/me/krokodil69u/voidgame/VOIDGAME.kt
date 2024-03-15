@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitTask
 
 class VOIDGAME : JavaPlugin() {
     var players = arrayListOf<Player>()
+    var playerWins = hashMapOf<Player, Int>()
     var playing: Boolean = false
     var gameLoop: BukkitTask? = null
     override fun onEnable() {

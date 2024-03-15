@@ -1,6 +1,8 @@
 package me.krokodil69u.voidgame.commands
 
 import me.krokodil69u.voidgame.VOIDGAME.Companion.instance
+import net.md_5.bungee.api.chat.TextComponent
+import net.md_5.bungee.api.chat.TranslatableComponent
 import org.bukkit.*
 import org.bukkit.block.Block
 import org.bukkit.block.Chest
@@ -12,6 +14,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 import kotlin.collections.ArrayList
+import kotlin.math.floor
 
 class StartGameCMD : CommandExecutor {
     override fun onCommand(commandSender: CommandSender, command: Command, s: String, strings: Array<String>): Boolean {
@@ -27,19 +30,37 @@ class StartGameCMD : CommandExecutor {
         clearGameField(sender)
         placeGameField(sender)
 
+        var lavaLVL = 86.0f
+
         instance!!.gameLoop = object : BukkitRunnable() {
             override fun run() {
-                Bukkit.broadcastMessage(ChatColor.YELLOW.toString() + "Items spawned!")
 
-                sender.world.worldBorder.size -= 0.14f
+                sender.world.worldBorder.size -= 0.9f
+
+                for (x in -16..16) {
+                    for (z in -16..16) {
+                        val replaceBlock = sender.world.getBlockAt(x, floor(lavaLVL).toInt(),z)
+                        if (replaceBlock.type == Material.AIR)
+                            replaceBlock.type = Material.LAVA
+                    }
+                }
+
+                lavaLVL += 0.5f
 
                 for (p in instance!!.players) {
                     val x = randomItem()
                     p.inventory.addItem(x)
-                    p.sendMessage(x.type.name)
+                    p.sendMessage(
+                        ChatColor.YELLOW.toString() + "Items spawned! " +
+                                ChatColor.GOLD.toString() + x.type.name
+                    )
+                    if (x.enchantments.size > 0)
+                        for (dd in x.enchantments)
+                            p.sendMessage(dd.key.toString() + " " + dd.value.toString())
+
                 }
             }
-        }.runTaskTimer(instance!!, 60, 180) // Повторять каждые 20 тиков (1 секунда)
+        }.runTaskTimer(instance!!, 60, 160) // Повторять каждые 20 тиков (1 секунда)
 
         return true
     }
@@ -112,12 +133,14 @@ class StartGameCMD : CommandExecutor {
                 Material.WAXED_EXPOSED_COPPER_GRATE, Material.WITHER_SKELETON_WALL_SKULL,
                 Material.CRAFTER, Material.COPPER_DOOR, Material.WAXED_COPPER_DOOR,
                 Material.WAXED_COPPER_TRAPDOOR, Material.COPPER_TRAPDOOR, Material.END_GATEWAY,
-                Material.NETHER_PORTAL, Material.END_PORTAL, Material.FROSTED_ICE
+                Material.NETHER_PORTAL, Material.END_PORTAL, Material.FROSTED_ICE,
+                Material.LIGHT
             )
             val bannedItemNames = listOf(
                 "air", "template", "pottery_sherd", "dye", "candle_cake", "command", "bulb",
                 "wall_banner", "wall_sign", "potted", "knowledge", "trial", "jigsaw",
-                "void", "grate", "redstone_wire"
+                "void", "grate", "redstone_wire", "hanging", "cauldron", "copper_trapdoor",
+                "copper_door", "wall_fun", "exposed"
             )
 
             var randomItem = ItemStack(Material.entries.toTypedArray().random())
@@ -138,14 +161,14 @@ class StartGameCMD : CommandExecutor {
             }
 
             if ((Math.random() * 5).toInt() == 3) {
-                var x = Enchantment.values().random()
+                val enc = Enchantment.values().random()
                 var power = 1 + (Math.random() * 10).toInt()
 
-                if (x == Enchantment.DAMAGE_ALL && power > 5)
+                if (enc == Enchantment.DAMAGE_ALL && power > 5)
                     power = 5
 
                 randomItem.addUnsafeEnchantment(
-                    x, power
+                    enc, power
                 )
             }
             return randomItem
