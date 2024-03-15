@@ -33,8 +33,10 @@ class StartGameCMD : CommandExecutor {
 
                 sender.world.worldBorder.size -= 0.14f
 
-                for (p in instance!!.players!!) {
-                    p.inventory.addItem(randomItem)
+                for (p in instance!!.players) {
+                    val x = randomItem()
+                    p.inventory.addItem(x)
+                    p.sendMessage(x.type.name)
                 }
             }
         }.runTaskTimer(instance!!, 60, 180) // Повторять каждые 20 тиков (1 секунда)
@@ -65,7 +67,7 @@ class StartGameCMD : CommandExecutor {
         val centerChest = chest.state as Chest
 
         for (i in 11..15) {
-            centerChest.inventory.setItem(i, randomItem)
+            centerChest.inventory.setItem(i, randomItem())
         }
 
         val spawnPoints: MutableList<Block> = ArrayList()
@@ -98,8 +100,7 @@ class StartGameCMD : CommandExecutor {
         }
     }
 
-    private val randomItem: ItemStack
-        get() {
+    private fun randomItem(): ItemStack {
             val bannedItems = listOf(
                 Material.AIR, Material.VOID_AIR, Material.OXIDIZED_COPPER_GRATE,
                 Material.EXPOSED_COPPER_GRATE, Material.WAXED_OXIDIZED_COPPER_GRATE,
@@ -109,17 +110,21 @@ class StartGameCMD : CommandExecutor {
                 Material.TUFF_BRICK_SLAB, Material.TUFF_BRICKS, Material.TUFF_BRICK_STAIRS, Material.TUFF_SLAB,
                 Material.TUFF_BRICK_WALL, Material.CHISELED_TUFF_BRICKS, Material.CHISELED_TUFF,
                 Material.WAXED_EXPOSED_COPPER_GRATE, Material.WITHER_SKELETON_WALL_SKULL,
-                Material.CRAFTER
+                Material.CRAFTER, Material.COPPER_DOOR, Material.WAXED_COPPER_DOOR,
+                Material.WAXED_COPPER_TRAPDOOR, Material.COPPER_TRAPDOOR, Material.END_GATEWAY,
+                Material.NETHER_PORTAL, Material.END_PORTAL
             )
             val bannedItemNames = listOf(
-                "air", "template", "pottery_sherd", "dye", "candle_cake", "command", "bulb"
+                "air", "template", "pottery_sherd", "dye", "candle_cake", "command", "bulb",
+                "wall_banner", "wall_sign", "potted", "knowledge", "trial", "jigsaw",
+                "void", "grate", "redstone_wire"
             )
 
             var randomItem = ItemStack(Material.entries.toTypedArray().random())
             var x = bannedItems.contains(randomItem.type)
 
             for (i in bannedItemNames) {
-                if (randomItem.translationKey.contains(i))
+                if (randomItem.type.name.lowercase().contains(i))
                     x = true
             }
 
@@ -128,14 +133,19 @@ class StartGameCMD : CommandExecutor {
 
                 x = bannedItems.contains(randomItem.type)
                 for (i in bannedItemNames) {
-                    if (randomItem.translationKey.contains(i)) x = false
+                    if (randomItem.type.name.lowercase().contains(i)) x = false
                 }
             }
 
             if ((Math.random() * 5).toInt() == 3) {
+                var x = Enchantment.values().random()
+                var power = 1 + (Math.random() * 10).toInt()
+
+                if (x == Enchantment.DAMAGE_ALL && power > 5)
+                    power = 5
+
                 randomItem.addUnsafeEnchantment(
-                    Enchantment.values().random(),
-                    1 + (Math.random() * 5).toInt()
+                    x, power
                 )
             }
             return randomItem
