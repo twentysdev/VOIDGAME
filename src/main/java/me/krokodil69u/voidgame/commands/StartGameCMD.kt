@@ -1,8 +1,6 @@
 package me.krokodil69u.voidgame.commands
 
 import me.krokodil69u.voidgame.VOIDGAME.Companion.instance
-import net.md_5.bungee.api.chat.TextComponent
-import net.md_5.bungee.api.chat.TranslatableComponent
 import org.bukkit.*
 import org.bukkit.block.Block
 import org.bukkit.block.Chest
@@ -14,6 +12,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 import kotlin.collections.ArrayList
+import kotlin.math.ceil
 import kotlin.math.floor
 
 class StartGameCMD : CommandExecutor {
@@ -36,11 +35,12 @@ class StartGameCMD : CommandExecutor {
             override fun run() {
 
                 sender.world.worldBorder.size -= 0.9f
+                val lavaRange = ceil(-sender.world.worldBorder.size/2).toInt()..ceil(sender.world.worldBorder.size/2).toInt()
 
-                for (x in -16..16) {
-                    for (z in -16..16) {
+                for (x in lavaRange) {
+                    for (z in lavaRange) {
                         val replaceBlock = sender.world.getBlockAt(x, floor(lavaLVL).toInt(),z)
-                        if (replaceBlock.type == Material.AIR)
+                        if (replaceBlock.type == Material.AIR && replaceBlock.type != Material.LAVA)
                             replaceBlock.type = Material.LAVA
                     }
                 }
@@ -54,10 +54,6 @@ class StartGameCMD : CommandExecutor {
                         ChatColor.YELLOW.toString() + "Items spawned! " +
                                 ChatColor.GOLD.toString() + x.type.name
                     )
-                    if (x.enchantments.size > 0)
-                        for (dd in x.enchantments)
-                            p.sendMessage(dd.key.toString() + " " + dd.value.toString())
-
                 }
             }
         }.runTaskTimer(instance!!, 60, 160) // Повторять каждые 20 тиков (1 секунда)
@@ -109,7 +105,7 @@ class StartGameCMD : CommandExecutor {
 
     private fun teleportPlayers(spawnPoints: List<Block>) {
         var ind = 0
-        for (p in instance!!.players!!) {
+        for (p in instance!!.players) {
             p.gameMode = GameMode.SURVIVAL
             val sp = spawnPoints[ind].location
             sp.y += 1
