@@ -7,3 +7,5 @@ commands:
     usage: /start
   stop:
     usage: /stop
+  startevent:
+    usage: /startevent

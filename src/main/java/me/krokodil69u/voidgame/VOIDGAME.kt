@@ -1,6 +1,7 @@
 package me.krokodil69u.voidgame
 
 import me.krokodil69u.voidgame.commands.Events
+import me.krokodil69u.voidgame.commands.StartEventCMD
 import me.krokodil69u.voidgame.commands.StartGameCMD
 import me.krokodil69u.voidgame.commands.StopGameCMD
 import org.bukkit.entity.Player
@@ -19,6 +20,7 @@ class VOIDGAME : JavaPlugin() {
 
         getCommand("start")!!.setExecutor(StartGameCMD())
         getCommand("stop")!!.setExecutor(StopGameCMD())
+        getCommand("startevent")!!.setExecutor(StartEventCMD())
         server.pluginManager.registerEvents(Events(), this)
     }
 
