@@ -152,7 +152,7 @@ class StartGameCMD : CommandExecutor {
 
                 x = bannedItems.contains(randomItem.type)
                 for (i in bannedItemNames) {
-                    if (randomItem.type.name.lowercase().contains(i)) x = false
+                    if (!randomItem.type.name.lowercase().contains(i)) x = false
                 }
             }
 
