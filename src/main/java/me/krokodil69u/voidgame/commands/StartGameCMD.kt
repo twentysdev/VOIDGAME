@@ -133,10 +133,10 @@ class StartGameCMD : CommandExecutor {
 
         val spawnPoints: MutableList<Block> = ArrayList()
 
-        spawnPoints.add(gameWorld.getBlockAt(Location(gameWorld, 11.0, 100.0, 0.0)))
-        spawnPoints.add(gameWorld.getBlockAt(Location(gameWorld, -11.0, 100.0, 0.0)))
-        spawnPoints.add(gameWorld.getBlockAt(Location(gameWorld, 0.0, 100.0, 11.0)))
-        spawnPoints.add(gameWorld.getBlockAt(Location(gameWorld, 0.0, 100.0, -11.0)))
+        spawnPoints.add(gameWorld.getBlockAt(Location(gameWorld, 7.5, 100.0, 0.0)))
+        spawnPoints.add(gameWorld.getBlockAt(Location(gameWorld, -7.5, 100.0, 0.0)))
+        spawnPoints.add(gameWorld.getBlockAt(Location(gameWorld, 0.0, 100.0, 7.5)))
+        spawnPoints.add(gameWorld.getBlockAt(Location(gameWorld, 0.0, 100.0, -7.5)))
 
         for (b in spawnPoints) {
             b.type = Material.BEDROCK
@@ -202,7 +202,8 @@ class StartGameCMD : CommandExecutor {
                 }
             }
             val z = (Math.random() * 10).toInt()
-            val zx = (Math.random() * 20).toInt()
+            val zx = (Math.random() * 50).toInt()
+            val zxc = (Math.random() * 80).toInt()
             if (z == 5) {
                 val meta = randomItem.itemMeta
                 meta?.setDisplayName("Random effect to random player / RMB")
@@ -210,6 +211,10 @@ class StartGameCMD : CommandExecutor {
             } else if (zx == 10) {
                 val meta = randomItem.itemMeta
                 meta?.setDisplayName("Switch with random player / RMB")
+                randomItem.setItemMeta(meta)
+            } else if (zxc == 15) {
+                val meta = randomItem.itemMeta
+                meta?.setDisplayName("Switch INVENTORY with random player / RMB")
                 randomItem.setItemMeta(meta)
             }
 

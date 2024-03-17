@@ -5,7 +5,7 @@ api-version: '1.20'
 commands:
   start:
     usage: /start
-  stop:
+  vgstop:
     usage: /stop
   startevent:
     usage: /startevent

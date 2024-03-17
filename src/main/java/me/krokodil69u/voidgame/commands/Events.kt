@@ -25,9 +25,16 @@ class Events : Listener {
         if (!instance!!.players.contains(player) && !instance!!.playing)
             return
 
+        for (item in player?.inventory?.contents!!) {
+            if (item == null)
+                continue
+            if (Random.nextInt(1,4) == 2)
+                player.killer?.inventory?.addItem(item)
+        }
+
         instance!!.players.remove(player)
-        player?.gameMode = GameMode.SPECTATOR
-        player?.teleport(Location(Bukkit.getWorld("voidgame"), 0.0, 110.0, 0.0))
+        player.gameMode = GameMode.SPECTATOR
+        player.teleport(Location(Bukkit.getWorld("voidgame"), 0.0, 110.0, 0.0))
 
         if (instance!!.players.size <= 1) {
             instance!!.playing = false
@@ -79,7 +86,14 @@ class Events : Listener {
                 player.teleport(rndPlayer.location)
                 rndPlayer.teleport(playerOldPos)
                 player.inventory.remove(event.material)
-                Bukkit.broadcastMessage("${ChatColor.GOLD}${player.name} ${ChatColor.YELLOW}switch with ${ChatColor.GOLD}${player.name}")
+                Bukkit.broadcastMessage("${ChatColor.GOLD}${player.name} ${ChatColor.YELLOW}switch with ${ChatColor.GOLD}${rndPlayer.name}")
+            }
+            if (event.item?.itemMeta?.displayName.equals("Switch INVENTORY with random player / RMB")) {
+                player.inventory.remove(event.material)
+                val playerOldInventory = player.inventory.contents
+                player.inventory.contents = rndPlayer.inventory.contents
+                rndPlayer.inventory.contents = playerOldInventory
+                Bukkit.broadcastMessage("${ChatColor.GOLD}${player.name} ${ChatColor.YELLOW}switch INVENTORY with ${ChatColor.GOLD}${rndPlayer.name}")
             }
         }
     }

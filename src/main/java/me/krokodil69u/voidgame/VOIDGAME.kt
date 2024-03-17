@@ -19,7 +19,7 @@ class VOIDGAME : JavaPlugin() {
         players = arrayListOf()
 
         getCommand("start")!!.setExecutor(StartGameCMD())
-        getCommand("stop")!!.setExecutor(StopGameCMD())
+        getCommand("vgstop")!!.setExecutor(StopGameCMD())
         getCommand("startevent")!!.setExecutor(StartEventCMD())
         server.pluginManager.registerEvents(Events(), this)
     }
