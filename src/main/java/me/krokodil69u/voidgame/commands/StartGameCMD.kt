@@ -1,7 +1,8 @@
 package me.krokodil69u.voidgame.commands
 
-import jdk.jfr.Event
 import me.krokodil69u.voidgame.VOIDGAME.Companion.instance
+import me.krokodil69u.voidgame.other.EmptyChunkGenerator
+import me.krokodil69u.voidgame.other.EventType
 import org.bukkit.*
 import org.bukkit.block.Block
 import org.bukkit.block.Chest
@@ -17,7 +18,6 @@ import org.bukkit.scheduler.BukkitRunnable
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.random.Random
-import kotlin.random.nextInt
 
 
 class StartGameCMD : CommandExecutor {
@@ -66,37 +66,7 @@ class StartGameCMD : CommandExecutor {
                 if (Random.nextInt(1, 100) < 5) {
                     val eventType = EventType.entries.random()
                     Bukkit.broadcastMessage(ChatColor.YELLOW.toString() + "EVENT! -> " + ChatColor.GOLD.toString() + eventType.toString())
-
-                    if (eventType == EventType.ANVIL_RAIN) {
-                        val range = -gameWorld.worldBorder.size / 2..gameWorld.worldBorder.size/2
-                        for (i in 0..10) {
-                            gameWorld.getBlockAt(
-                                Random.nextInt(range.start.toInt(), range.endInclusive.toInt()),
-                                130,
-                                Random.nextInt(range.start.toInt(), range.endInclusive.toInt())
-                            ).type = Material.ANVIL
-                        }
-                    } else if (eventType == EventType.BLINDNESS) {
-                        for (i in instance!!.players) {
-                            i.addPotionEffect(
-                                PotionEffect(
-                                    PotionEffectType.BLINDNESS,
-                                    200,
-                                    5
-                                )
-                            )
-                        }
-                    } else if (eventType == EventType.NAUSEA) {
-                        for (i in instance!!.players) {
-                            i.addPotionEffect(
-                                PotionEffect(
-                                    PotionEffectType.CONFUSION,
-                                    200,
-                                    10
-                                )
-                            )
-                        }
-                    }
+                    eventType.run(gameWorld)
                 }
             }
         }.runTaskTimer(instance!!, 60, 160) // Повторять каждые 20 тиков (1 секунда)

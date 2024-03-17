@@ -1,10 +1,8 @@
-package me.krokodil69u.voidgame.commands
+package me.krokodil69u.voidgame.events
 
 import me.krokodil69u.voidgame.VOIDGAME.Companion.instance
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.Effect
-import org.bukkit.EntityEffect
 import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.event.EventHandler
@@ -14,7 +12,6 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.bukkit.potion.PotionType
 import kotlin.random.Random
 
 class Events : Listener {

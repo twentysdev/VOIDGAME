@@ -1,4 +1,4 @@
-package me.krokodil69u.voidgame.commands
+package me.krokodil69u.voidgame.other
 
 import org.bukkit.World
 import org.bukkit.generator.ChunkGenerator
