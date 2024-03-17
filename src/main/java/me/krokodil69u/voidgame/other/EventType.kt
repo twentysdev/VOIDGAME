@@ -9,7 +9,8 @@ import kotlin.random.Random
 
 enum class EventType {
     ANVIL_RAIN {
-        override fun run(gameWorld: World) {
+        override fun run() {
+            val gameWorld = VOIDGAME.instance!!.gameWorld
             val range = -gameWorld.worldBorder.size / 2..gameWorld.worldBorder.size/2
             for (i in 0..10) {
                 gameWorld.getBlockAt(
@@ -21,7 +22,7 @@ enum class EventType {
        }
    },
     BLINDNESS {
-    override fun run (gameWorld: World) {
+    override fun run() {
         for (i in VOIDGAME.instance!!.players) {
             i.addPotionEffect(
                 PotionEffect(
@@ -34,7 +35,7 @@ enum class EventType {
         }
     },
     NAUSEA {
-        override fun run(gameWorld: World) {
+        override fun run() {
             for (i in VOIDGAME.instance!!.players) {
                 i.addPotionEffect(
                         PotionEffect(
@@ -47,5 +48,5 @@ enum class EventType {
         }
     };
 
-    abstract fun run(gameWorld: World)
+    abstract fun run()
 }

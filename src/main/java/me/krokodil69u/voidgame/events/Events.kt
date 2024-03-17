@@ -61,37 +61,38 @@ class Events : Listener {
         if (!instance!!.players.contains(player) && !instance!!.playing)
             return
 
-        if (event.action == Action.RIGHT_CLICK_AIR ||
-            event.action == Action.RIGHT_CLICK_BLOCK) {
-            val rndPlayer = instance!!.players.random()
+        if (event.action != Action.RIGHT_CLICK_AIR ||
+            event.action != Action.RIGHT_CLICK_BLOCK)
+            return
 
-            if (event.item?.itemMeta?.displayName.equals("Random effect to random player / RMB")) {
-                val rndPotion = PotionEffect(
-                    PotionEffectType.values().random(),
-                    Random.nextInt(100, 300),
-                    Random.nextInt(1, 6)
-                )
-                rndPlayer.addPotionEffect(
-                    rndPotion
-                )
-                Bukkit.broadcastMessage("${ChatColor.GOLD}${player.name} ${ChatColor.YELLOW}applied an ${ChatColor.GOLD}${rndPotion}" +
-                        "${ChatColor.YELLOW} to ${ChatColor.GOLD}${rndPlayer.name}")
-                player.inventory.remove(event.material)
-            }
-            if (event.item?.itemMeta?.displayName.equals("Switch with random player / RMB")) {
-                val playerOldPos = player.location
-                player.teleport(rndPlayer.location)
-                rndPlayer.teleport(playerOldPos)
-                player.inventory.remove(event.material)
-                Bukkit.broadcastMessage("${ChatColor.GOLD}${player.name} ${ChatColor.YELLOW}switch with ${ChatColor.GOLD}${rndPlayer.name}")
-            }
-            if (event.item?.itemMeta?.displayName.equals("Switch INVENTORY with random player / RMB")) {
-                player.inventory.remove(event.material)
-                val playerOldInventory = player.inventory.contents
-                player.inventory.contents = rndPlayer.inventory.contents
-                rndPlayer.inventory.contents = playerOldInventory
-                Bukkit.broadcastMessage("${ChatColor.GOLD}${player.name} ${ChatColor.YELLOW}switch INVENTORY with ${ChatColor.GOLD}${rndPlayer.name}")
-            }
+        val rndPlayer = instance!!.players.random()
+
+        if (event.item?.itemMeta?.displayName.equals("Random effect to random player / RMB")) {
+            val rndPotion = PotionEffect(
+                PotionEffectType.values().random(),
+                Random.nextInt(100, 300),
+                Random.nextInt(1, 6)
+            )
+            rndPlayer.addPotionEffect(
+                rndPotion
+            )
+            Bukkit.broadcastMessage("${ChatColor.GOLD}${player.name} ${ChatColor.YELLOW}applied an ${ChatColor.GOLD}${rndPotion}" +
+                    "${ChatColor.YELLOW} to ${ChatColor.GOLD}${rndPlayer.name}")
+            player.inventory.remove(event.material)
+        }
+        if (event.item?.itemMeta?.displayName.equals("Switch with random player / RMB")) {
+            val playerOldPos = player.location
+            player.teleport(rndPlayer.location)
+            rndPlayer.teleport(playerOldPos)
+            player.inventory.remove(event.material)
+            Bukkit.broadcastMessage("${ChatColor.GOLD}${player.name} ${ChatColor.YELLOW}switch with ${ChatColor.GOLD}${rndPlayer.name}")
+        }
+        if (event.item?.itemMeta?.displayName.equals("Switch INVENTORY with random player / RMB")) {
+            player.inventory.remove(event.material)
+            val playerOldInventory = player.inventory.contents
+            player.inventory.contents = rndPlayer.inventory.contents
+            rndPlayer.inventory.contents = playerOldInventory
+            Bukkit.broadcastMessage("${ChatColor.GOLD}${player.name} ${ChatColor.YELLOW}switch INVENTORY with ${ChatColor.GOLD}${rndPlayer.name}")
         }
     }
 }
