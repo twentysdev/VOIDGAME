@@ -1,16 +1,16 @@
-package me.krokodil69u.voidgame.other
+package me.krokodil69u.voidgame.types
 
 import me.krokodil69u.voidgame.VOIDGAME
+import me.krokodil69u.voidgame.utils.Utils
 import org.bukkit.Material
-import org.bukkit.World
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import org.bukkit.util.Vector
 import kotlin.random.Random
 
 enum class EventType {
     ANVIL_RAIN {
         override fun run() {
-            val gameWorld = VOIDGAME.instance!!.gameWorld
             val range = -gameWorld.worldBorder.size / 2..gameWorld.worldBorder.size/2
             for (i in 0..10) {
                 gameWorld.getBlockAt(
@@ -46,7 +46,30 @@ enum class EventType {
                 )
             }
         }
+    },
+    EJECTION {
+        override fun run() {
+            for (player in VOIDGAME.instance!!.players) {
+                player.velocity = Vector(player.velocity.x, player.velocity.y+10, player.velocity.z)
+                player.addPotionEffect(
+                        PotionEffect(
+                                PotionEffectType.SLOW_FALLING,
+                        100,
+                        3
+                        )
+                )
+            }
+        }
+    },
+    RANDOM_EFFECT {
+        override fun run() {
+            for (player in VOIDGAME.instance!!.players) {
+                player.addPotionEffect(Utils.instance!!
+                        .getRandomPotionEffect(100..200, 1..5))
+            }
+        }
     };
 
     abstract fun run()
+    val gameWorld = VOIDGAME.instance!!.gameWorld
 }

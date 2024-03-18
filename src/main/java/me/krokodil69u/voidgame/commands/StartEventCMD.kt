@@ -1,16 +1,11 @@
 package me.krokodil69u.voidgame.commands
 
-import me.krokodil69u.voidgame.VOIDGAME
-import me.krokodil69u.voidgame.other.EventType
+import me.krokodil69u.voidgame.types.EventType
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
-import kotlin.random.Random
 
 class StartEventCMD : CommandExecutor {
     override fun onCommand(commandSender: CommandSender, command: Command, s: String, strings: Array<String>): Boolean {

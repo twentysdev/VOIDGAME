@@ -1,10 +1,12 @@
 package me.krokodil69u.voidgame
 
+import me.krokodil69u.voidgame.commands.SpawnRandomItemsCMD
 import me.krokodil69u.voidgame.commands.StartEventCMD
 import me.krokodil69u.voidgame.commands.StartGameCMD
 import me.krokodil69u.voidgame.commands.StopGameCMD
 import me.krokodil69u.voidgame.events.Events
-import me.krokodil69u.voidgame.other.EmptyChunkGenerator
+import me.krokodil69u.voidgame.utils.EmptyChunkGenerator
+import org.bukkit.Location
 import org.bukkit.World
 import org.bukkit.WorldCreator
 import org.bukkit.entity.Player
@@ -16,11 +18,11 @@ class VOIDGAME : JavaPlugin() {
     var playerWins = hashMapOf<Player, Int>()
     var playing: Boolean = false
     var gameLoop: BukkitTask? = null
+    var oldPlayerLocations = hashMapOf<Player, Location>()
     lateinit var gameWorld: World
+
     override fun onEnable() {
         instance = this
-        playing = false
-        players = arrayListOf()
 
         val worldCreator = WorldCreator("VOIDGAME")
         worldCreator.generator(EmptyChunkGenerator())
@@ -29,10 +31,8 @@ class VOIDGAME : JavaPlugin() {
         getCommand("start")!!.setExecutor(StartGameCMD())
         getCommand("vgstop")!!.setExecutor(StopGameCMD())
         getCommand("startevent")!!.setExecutor(StartEventCMD())
+        getCommand("spawnitems")!!.setExecutor(SpawnRandomItemsCMD())
         server.pluginManager.registerEvents(Events(), this)
-    }
-
-    override fun onDisable() {
     }
 
     companion object {

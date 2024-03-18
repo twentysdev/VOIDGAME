@@ -1,7 +1,9 @@
 package me.krokodil69u.voidgame.commands
 
 import me.krokodil69u.voidgame.VOIDGAME.Companion.instance
-import me.krokodil69u.voidgame.other.EventType
+import me.krokodil69u.voidgame.types.EventType
+import me.krokodil69u.voidgame.types.SuperItemType
+import me.krokodil69u.voidgame.utils.Utils
 import org.bukkit.*
 import org.bukkit.block.Block
 import org.bukkit.block.Chest
@@ -24,6 +26,11 @@ class StartGameCMD : CommandExecutor {
             return true
 
         instance!!.players = ArrayList(Bukkit.getOnlinePlayers())
+
+        for (player in instance!!.players) {
+            instance!!.oldPlayerLocations[player] = player.location
+        }
+
         instance!!.playing = true
 
         clearGameField()
@@ -34,7 +41,7 @@ class StartGameCMD : CommandExecutor {
         instance!!.gameLoop = object : BukkitRunnable() {
             override fun run() {
                 lavaLVL = updateBorders(lavaLVL)
-                giveItems()
+                Utils.instance!!.giveRandomItemsToPlayers()
                 if (Random.nextInt(1, 100) < 5) {
                     val eventType = EventType.entries.random()
                     Bukkit.broadcastMessage(ChatColor.YELLOW.toString() + "EVENT! -> " + ChatColor.GOLD.toString() + eventType.toString())
@@ -44,16 +51,6 @@ class StartGameCMD : CommandExecutor {
         }.runTaskTimer(instance!!, 60, 160) // Повторять каждые 20 тиков (1 секунда)
 
         return true
-    }
-    private fun giveItems() {
-        for (p in instance!!.players) {
-            val x = randomItem()
-            p.inventory.addItem(x)
-            p.sendMessage(
-                    ChatColor.YELLOW.toString() + "Items spawned! " +
-                            ChatColor.GOLD.toString() + x.type.name.replace('_', ' ')
-            )
-        }
     }
 
     private fun updateBorders(lastLavaLVL: Double): Double {
@@ -99,7 +96,7 @@ class StartGameCMD : CommandExecutor {
         val centerChest = chest.state as Chest
 
         for (i in 11..15) {
-            centerChest.inventory.setItem(i, randomItem())
+            centerChest.inventory.setItem(i, Utils.instance!!.getRandomItem())
         }
 
         val spawnPoints: MutableList<Block> = ArrayList()
@@ -132,74 +129,5 @@ class StartGameCMD : CommandExecutor {
             p.health = 20.0
             ind++
         }
-    }
-
-    private fun randomItem(): ItemStack {
-        val bannedItems = listOf(
-            Material.AIR, Material.VOID_AIR, Material.OXIDIZED_COPPER_GRATE,
-            Material.EXPOSED_COPPER_GRATE, Material.WAXED_OXIDIZED_COPPER_GRATE,
-            Material.POLISHED_TUFF, Material.POLISHED_TUFF_SLAB, Material.POLISHED_TUFF_STAIRS,
-            Material.POLISHED_TUFF_WALL, Material.WAXED_EXPOSED_COPPER_DOOR,
-            Material.COMMAND_BLOCK, Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK,
-            Material.TUFF_BRICK_SLAB, Material.TUFF_BRICKS, Material.TUFF_BRICK_STAIRS, Material.TUFF_SLAB,
-            Material.TUFF_BRICK_WALL, Material.CHISELED_TUFF_BRICKS, Material.CHISELED_TUFF,
-            Material.WAXED_EXPOSED_COPPER_GRATE, Material.WITHER_SKELETON_WALL_SKULL,
-            Material.CRAFTER, Material.COPPER_DOOR, Material.WAXED_COPPER_DOOR,
-            Material.WAXED_COPPER_TRAPDOOR, Material.COPPER_TRAPDOOR, Material.END_GATEWAY,
-            Material.NETHER_PORTAL, Material.END_PORTAL, Material.FROSTED_ICE,
-            Material.LIGHT
-        )
-        val bannedItemNames = listOf(
-            "air", "template", "pottery_sherd", "dye", "candle_cake", "command", "bulb",
-            "wall_banner", "wall_sign", "potted", "knowledge", "trial", "jigsaw",
-            "void", "grate", "redstone_wire", "hanging", "cauldron", "copper_trapdoor",
-            "copper_door", "wall_fun", "exposed", "map", "chiseled_copper"
-        )
-
-        var randomItem = ItemStack(Material.entries.toTypedArray().random())
-        var isAvailable = bannedItems.contains(randomItem.type)
-
-        for (bannedItem in bannedItemNames) {
-            if (randomItem.type.name.lowercase().contains(bannedItem))
-                isAvailable = true
-        }
-
-        while (isAvailable) {
-            randomItem = ItemStack(Material.entries.toTypedArray().random())
-
-            isAvailable = bannedItems.contains(randomItem.type)
-            for (bannedItemName in bannedItemNames) {
-                if (randomItem.type.name.lowercase().contains(bannedItemName))
-                    isAvailable = true
-            }
-        }
-
-        val randomPercentage = Random.nextInt(0..100)
-        if (randomPercentage <= 10) {
-            val meta = randomItem.itemMeta
-            meta?.setDisplayName("Random effect to random player / RMB")
-            randomItem.setItemMeta(meta)
-        } else if (randomPercentage <= 14) {
-            val meta = randomItem.itemMeta
-            meta?.setDisplayName("Switch with random player / RMB")
-            randomItem.setItemMeta(meta)
-        } else if (randomPercentage <= 15) {
-            val meta = randomItem.itemMeta
-            meta?.setDisplayName("Switch INVENTORY with random player / RMB")
-            randomItem.setItemMeta(meta)
-        }
-
-        if ((Math.random() * 5).toInt() == 3) {
-            val enc = Enchantment.values().random()
-            var power = 1 + (Math.random() * 10).toInt()
-
-            if (enc == Enchantment.DAMAGE_ALL && power > 5)
-                power = 5
-
-            randomItem.addUnsafeEnchantment(
-                enc, power
-            )
-        }
-        return randomItem
     }
 }
