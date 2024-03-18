@@ -10,7 +10,7 @@ import org.bukkit.entity.Player
 enum class SuperItemType {
     /*
 
-        SORT BY FROM MIN TO MAX CHANCE IN PERCENT
+        SORT FROM MIN TO MAX CHANCE IN PERCENT
 
      */
 
@@ -48,9 +48,7 @@ enum class SuperItemType {
             val onPlayer = VOIDGAME.instance!!.players.random()
             val rndPotion = Utils.instance!!.getRandomPotionEffect(100..300, 1..6)
 
-            onPlayer.addPotionEffect(
-                    rndPotion
-            )
+            onPlayer.addPotionEffect(rndPotion)
 
             Bukkit.broadcastMessage("${ChatColor.GOLD}${user.name} ${ChatColor.YELLOW}applied an ${ChatColor.GOLD}${rndPotion}" +
                     "${ChatColor.YELLOW} to ${ChatColor.GOLD}${onPlayer.name}")

@@ -50,7 +50,7 @@ enum class EventType {
     EJECTION {
         override fun run() {
             for (player in VOIDGAME.instance!!.players) {
-                player.velocity = Vector(player.velocity.x, player.velocity.y+10, player.velocity.z)
+                player.velocity = Vector(player.velocity.x, player.velocity.y+2, player.velocity.z)
                 player.addPotionEffect(
                         PotionEffect(
                                 PotionEffectType.SLOW_FALLING,

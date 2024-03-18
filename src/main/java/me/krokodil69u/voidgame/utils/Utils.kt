@@ -51,8 +51,9 @@ class Utils {
         Bukkit.broadcastMessage("${ChatColor.GREEN}${randomItem.type}")
 
         val randomPercentage = Random.nextInt(0..100)
+
         for (item in SuperItemType.entries) {
-            if (item.chanceInPercent <= randomPercentage) {
+            if (randomPercentage <= item.chanceInPercent) {
                 randomItem.itemMeta?.setDisplayName(item.name_)
                 randomItem.type = item.material
                 break
@@ -85,10 +86,10 @@ class Utils {
                 Material.CRAFTER, Material.COPPER_DOOR, Material.WAXED_COPPER_DOOR,
                 Material.WAXED_COPPER_TRAPDOOR, Material.COPPER_TRAPDOOR, Material.END_GATEWAY,
                 Material.NETHER_PORTAL, Material.END_PORTAL, Material.FROSTED_ICE,
-                Material.LIGHT
+                Material.LIGHT, Material.KELP_PLANT
         )
         val bannedItemNames = listOf(
-                "air", "template", "pottery_sherd", "dye", "candle_cake", "command", "bulb",
+                "template", "pottery_sherd", "dye", "candle_cake", "command", "bulb",
                 "wall_banner", "wall_sign", "potted", "knowledge", "trial", "jigsaw",
                 "void", "grate", "redstone_wire", "hanging", "cauldron", "copper_trapdoor",
                 "copper_door", "wall_fun", "exposed", "map", "chiseled_copper", "grate"
