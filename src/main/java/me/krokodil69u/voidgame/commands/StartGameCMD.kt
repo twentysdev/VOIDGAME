@@ -13,6 +13,8 @@ import org.bukkit.command.CommandSender
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -127,6 +129,11 @@ class StartGameCMD : CommandExecutor {
             p.inventory.clear()
             p.foodLevel = 20
             p.health = 20.0
+            p.addPotionEffect(PotionEffect(
+                    PotionEffectType.SLOW,
+                    60,
+                    100
+            ))
             ind++
         }
     }

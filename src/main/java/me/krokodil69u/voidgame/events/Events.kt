@@ -12,8 +12,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.potion.PotionEffect
-import org.bukkit.potion.PotionEffectType
+import org.bukkit.event.player.PlayerQuitEvent
 import kotlin.random.Random
 
 class Events : Listener {
@@ -70,6 +69,22 @@ class Events : Listener {
         for (itemType in SuperItemType.entries) {
             if (event.item?.itemMeta?.displayName.equals(itemType.name_))
                 itemType.use(player)
+        }
+    }
+
+    @EventHandler
+    fun onPlayerQuit(event: PlayerQuitEvent) {
+        val player = event.player
+
+        if (!instance!!.playing && !instance!!.players.contains(player))
+            return
+
+        instance!!.players.remove(player)
+
+        if (instance!!.players.size == 0)
+            Utils.instance!!.stopGame()
+        else if (instance!!.players.size == 1) {
+            // winner
         }
     }
 }

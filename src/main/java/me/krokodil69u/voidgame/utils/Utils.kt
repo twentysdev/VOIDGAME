@@ -4,6 +4,7 @@ import me.krokodil69u.voidgame.VOIDGAME
 import me.krokodil69u.voidgame.types.SuperItemType
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Item
@@ -41,20 +42,36 @@ class Utils {
             )
         }
     }
+
+    fun stopGame() {
+        VOIDGAME.instance!!.gameLoop!!.cancel()
+
+        val defaultLocation = Location(
+                Bukkit.getWorld("overworld"),
+                0.0, 0.0, 0.0
+        )
+        for (player in VOIDGAME.instance!!.gameWorld.players) {
+            player.teleport(VOIDGAME.instance!!.oldPlayerLocations.getOrDefault(player, defaultLocation))
+        }
+
+        VOIDGAME.instance!!.players = arrayListOf()
+        VOIDGAME.instance!!.playing = false
+    }
+
     fun getRandomItem(): ItemStack {
         var randomItem = ItemStack(Material.entries.random())
 
         while (!itemIsAvailable(randomItem.type)) {
-            Bukkit.broadcastMessage("${ChatColor.RED}${randomItem.type}")
             randomItem = ItemStack(Material.entries.random())
         }
-        Bukkit.broadcastMessage("${ChatColor.GREEN}${randomItem.type}")
 
         val randomPercentage = Random.nextInt(0..100)
 
         for (item in SuperItemType.entries) {
             if (randomPercentage <= item.chanceInPercent) {
-                randomItem.itemMeta?.setDisplayName(item.name_)
+                val meta = randomItem.itemMeta
+                meta?.setDisplayName(item.name_)
+                randomItem.setItemMeta(meta)
                 randomItem.type = item.material
                 break
             }
