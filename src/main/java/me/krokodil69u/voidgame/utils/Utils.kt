@@ -11,6 +11,7 @@ import org.bukkit.entity.Item
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import java.util.Vector
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -51,7 +52,9 @@ class Utils {
                 0.0, 0.0, 0.0
         )
         for (player in VOIDGAME.instance!!.gameWorld.players) {
+            player.velocity = org.bukkit.util.Vector(0,0,0)
             player.teleport(VOIDGAME.instance!!.oldPlayerLocations.getOrDefault(player, defaultLocation))
+            player.velocity = org.bukkit.util.Vector(0,0,0)
         }
 
         VOIDGAME.instance!!.players = arrayListOf()
@@ -103,13 +106,14 @@ class Utils {
                 Material.CRAFTER, Material.COPPER_DOOR, Material.WAXED_COPPER_DOOR,
                 Material.WAXED_COPPER_TRAPDOOR, Material.COPPER_TRAPDOOR, Material.END_GATEWAY,
                 Material.NETHER_PORTAL, Material.END_PORTAL, Material.FROSTED_ICE,
-                Material.LIGHT, Material.KELP_PLANT
+                Material.LIGHT, Material.KELP_PLANT, Material.ATTACHED_MELON_STEM,
+                Material.ATTACHED_PUMPKIN_STEM, Material.CARROTS
         )
         val bannedItemNames = listOf(
                 "template", "pottery_sherd", "dye", "candle_cake", "command", "bulb",
                 "wall_banner", "wall_sign", "potted", "knowledge", "trial", "jigsaw",
                 "void", "grate", "redstone_wire", "hanging", "cauldron", "copper_trapdoor",
-                "copper_door", "wall_fun", "exposed", "map", "chiseled_copper", "grate"
+                "copper_door", "wall_fun", "exposed", "map", "chiseled_copper", "grate", "wall_head"
         )
 
         var isAvailable = !bannedItems.contains(item)

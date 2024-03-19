@@ -9,3 +9,5 @@ commands:
     usage: /stop
   startevent:
     usage: /startevent
+  spawnitems:
+    usage: /spawnitems

@@ -35,9 +35,6 @@ class Events : Listener {
         player.teleport(Location(Bukkit.getWorld("voidgame"), 0.0, 110.0, 0.0))
 
         if (instance!!.players.size <= 1) {
-            instance!!.playing = false
-            instance!!.gameLoop!!.cancel()
-
             if (instance!!.players.size == 1) {
                 val winner = instance!!.players[0]
                 if (instance!!.playerWins.contains(winner))
@@ -52,6 +49,7 @@ class Events : Listener {
                     p.sendTitle(ChatColor.GOLD.toString() + winner.name, "win", 20, 60, 20)
                 }
             }
+            Utils.instance!!.stopGame()
         }
     }
 
@@ -67,8 +65,10 @@ class Events : Listener {
             return
 
         for (itemType in SuperItemType.entries) {
-            if (event.item?.itemMeta?.displayName.equals(itemType.name_))
+            if (event.item?.itemMeta?.displayName.equals(itemType.name_)) {
+                Bukkit.broadcastMessage(event.item?.itemMeta?.displayName!!)
                 itemType.use(player)
+            }
         }
     }
 
